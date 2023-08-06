@@ -7,14 +7,17 @@ import { Filter } from './Filter/Filter';
 
 class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const getContacts = JSON.parse(localStorage.getItem('contacts'));
+
+    if (getContacts) {
+      this.setState({ contacts: JSON.parse(localStorage.getItem('contacts')) });
+    }
+  }
 
   onInput = evt => {
     evt.preventDefault();
@@ -32,7 +35,7 @@ class App extends Component {
     }
 
     this.setState(prevState => {
-      return {
+      const book = {
         name: inputName,
         number: inputNumber,
         contacts: [
@@ -40,6 +43,10 @@ class App extends Component {
           { number: inputNumber, name: inputName, id: nanoid() },
         ],
       };
+
+      localStorage.setItem('contacts', JSON.stringify(book.contacts));
+
+      return book;
     });
 
     evt.currentTarget.number.value = '';
@@ -53,12 +60,14 @@ class App extends Component {
     });
   };
 
-  deleteContact = evt => {
-    this.setState({
+  deleteContact = async evt => {
+    await this.setState({
       contacts: this.state.contacts.filter(
         contact => contact.id !== evt.currentTarget.id
       ),
     });
+
+    localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
   };
 
   render() {
