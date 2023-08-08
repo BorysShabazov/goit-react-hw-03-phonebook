@@ -1,4 +1,5 @@
 import styles from './phoneBook.module.css';
+import PropTypes from 'prop-types';
 
 export const PhoneBook = ({ onInput }) => {
   return (
@@ -28,4 +29,8 @@ export const PhoneBook = ({ onInput }) => {
       <button type="submit">Add contact</button>
     </form>
   );
+};
+
+PhoneBook.propTypes = {
+  onInput: PropTypes.func,
 };
